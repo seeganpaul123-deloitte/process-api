@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs"
+	xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:listener-config name="main_http_listener" doc:name="HTTP Listener config" doc:id="d8e0f8a5-d998-49bf-87b1-9d381469e400" >
+		<http:listener-connection host="localhost" port="8082"/>
+	</http:listener-config>
+	<snowflake:snowflake-config name="main_snowflake_config" doc:name="Snowflake Config" doc:id="8ba0410a-b10d-4e63-a593-19eda9f8dc91" >
+		<snowflake:snowflake-connection accountName="${secure::db.Account Name}" warehouse="${secure::db.Warehouse}" database="${secure::db.Database}" schema="${secure::db.Schema}" user="${secure::db.User}" password="${secure::db.Password}" role="ACCOUNTADMIN" />
+	</snowflake:snowflake-config>
+	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="a05e8fc4-381b-4683-a010-d6db0ea8d35e" defaultQueueUrl="https://sqs.us-east-1.amazonaws.com/810890036454/MG1" >
+		<sqs:basic-connection testQueueArn="${secure::aws.arn}" accessKey="${secure::aws.Access Key}" secretKey="${secure::aws.Secret Key}" />
+	</sqs:config>
+	<email:smtp-config name="Email_SMTP1" doc:name="Email SMTP" doc:id="1809d5ee-8284-4518-b0f7-402155c4dc1c" >
+		<email:smtp-connection host="smtp.gmail.com" port="587" user="seeganpaul31@gmail.com" password="31072000" >
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<secure-properties:config name="snowflake_config" doc:name="Secure Properties Config" doc:id="e0ac06e4-7924-465d-b3e7-e10bf390d5a7" file="Properties.yaml" key="teamproject" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<secure-properties:config name="aws_Properties_Config" doc:name="Secure Properties Config" doc:id="355c4840-37b4-4988-ba91-43ec0aeb2f42" file="aws_properties.yaml" key="aws" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<http:request-config name="main_http_request" doc:name="HTTP Request configuration" doc:id="59fa5569-dcd0-4705-8855-02ca5946c744" >
+		<http:request-connection host="localhost" port="8083" />
+	</http:request-config>
+</mule>

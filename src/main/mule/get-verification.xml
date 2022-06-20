@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs" xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="3ed884ff-132e-4074-9336-56435d531d32" >
+		<email:smtp-connection host="smtp.gmail.com" port="587" user="seeganpaul31@gmail.com" password="31072000" >
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<flow name="get-verification" doc:id="2009e782-e219-4795-880c-fd7ebd7aab3c" >
+		<sqs:read doc:name="Read" doc:id="1a4bd5f8-5476-4b4f-b61a-ae7eba9f36c0" config-ref="Amazon_SQS_Configuration" maxNumberOfMessages="1" queueUrl="https://sqs.us-east-1.amazonaws.com/810890036454/MG1"/>
+		<set-variable value="#[payload.receiptHandle[0]]" doc:name="receipt_haddler" doc:id="bbe2b333-e4d6-4ab0-9ae1-e10bc134d2a4" variableName="receipt_haddler" />
+		<ee:transform doc:name="Transform Message" doc:id="fde2cb40-d39d-498f-9eda-7d08de2003db" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var payload1 = read(payload.body[0],"application/json")
+---
+payload1]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a056cf2c-4156-4201-8f4c-776765062afb" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="59d236a0-340c-4089-a355-b11f78e79ccf">
+			<ee:message>
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="email"><![CDATA[%dw 2.0
+output application/json
+
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="4a31fc79-9f56-4bee-996a-315d4d11410e" name="amount&lt;200000" />
+		<ee:transform doc:name="Transform Message" doc:id="d0644982-da0b-4a5b-a3d0-7b7d09664f39" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="final" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<sqs:delete-message doc:name="Delete message" doc:id="e2307aef-74dc-4aad-8410-351f4b1e5253" config-ref="Amazon_SQS_Configuration" receiptHandle="#[vars.receipt_haddler]" queueUrl="https://sqs.us-east-1.amazonaws.com/810890036454/MG1" />
+		<ee:transform doc:name="Transform Message" doc:id="557f2888-2e45-446f-b394-8e4e51e01ad6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.final]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="1eeaadad-3121-4133-ae40-279ff287371b" config-ref="main_http_request" path="/api/loan-status"/>
+	</flow>
+	<flow name="amount&lt;200000" doc:id="257055f7-525c-4aab-8144-0fcee57df6f0" >
+		<ee:transform doc:name="Transform Message" doc:id="29f8a795-ba17-4fe5-b7e4-57188f070248" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="5c9f1d2f-0dda-43bf-8c3d-b0782e941772" message="#[payload]"/>
+		<choice doc:name="Choice" doc:id="c7165972-56a9-4779-9597-8b75234011aa" >
+			<when expression='#[payload.TYPE == "Home"]'>
+				<ee:transform doc:name="Transform Message" doc:id="b8dbd0c9-1898-4f12-a75f-9da19a76676e" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="Home" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<http:request method="GET" doc:name="Request" doc:id="8a9dd61d-9028-485c-8016-9caccfa71005" config-ref="main_http_request" path="/api/cibil-score/{UserId}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"UserId" : vars.Home.USERID
+}]]]></http:uri-params>
+				</http:request>
+				<ee:transform doc:name="Transform Message" doc:id="4babb689-e1ee-4d8d-9cf6-27aece527fbd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+var interest = vars.Home.INTEREST as Number 
+var tenure = vars.Home.TENURE as Number
+var score = payload.Score 
+---
+{
+	
+  "loan_id": vars.Home.LOAN_ID,
+  "user_id": vars.Home.USERID,
+  ("status": "Accepted") if(6.5 < interest and interest < 8.5 and 60< tenure and tenure <240 and score >600 and vars.Home.INCOME as Number > 25000),
+  ("status": "Denied") if (6.5>= interest or interest >= 8.5 or 60>= tenure or tenure >= 240 or score <=600 or vars.Home.INCOME as Number <= 25000),
+  "reason": if(6.5>= interest and interest >= 8.5 and 60>= tenure and tenure >= 240 and score <=600 and vars.Home.INCOME as Number <= 25000)("All criteria are not satisfied") else if(6.5>= interest or interest >= 8.5)("interest not in range") else if(vars.Home.INCOME as Number <= 25000)("income not in range") else if( 60>= tenure or tenure >= 240)("tenure not in range") else if(payload.SCORE[0] <=600)("Score not in range") else("fulfilled all criteria"),
+  //("reason": "interest not in range") if(6.5>= interest or interest >= 8.5),
+  //("reason": "income not in range") if(vars.Home.INCOME as Number <= 25000),
+  //("reason": "tenure not in range") if(60>= tenure or tenure >= 240),
+  //("reason": "Score not in range") if(score<=600),
+  //("reason": "fulfilled all criteria") if(6.5 < interest and interest < 8.5 and 60< tenure and tenure <240 and score >600),
+  "amount": vars.Home.LOAN_AMOUNT as Number
+
+}
+
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="431c9850-e077-481c-8df6-0162257d7643" message="#[payload]"/>
+				<choice doc:name="Choice" doc:id="007574b2-4c41-489e-92d7-279b514209ac" >
+					<when expression='#[payload.amount &gt;= 200000 and payload.status == "Accepted"]'>
+						<ee:transform doc:name="Transform Message" doc:id="3708b9e9-fc09-49b2-9ca8-3872f1dd5b13">
+							<ee:message>
+								<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<choice doc:name="Choice" doc:id="172d9e39-e874-411c-84f0-b47c917b1b35">
+							<when expression="#[payload.amount &gt;= 200000 and payload.amount &lt;=1000000]">
+								<ee:transform doc:name="Transform Message" doc:id="48f7bc60-8b9c-465f-87b5-eaabef9a72d7">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: payload.status,
+	reason: payload.reason ++" and Approved by MG1",
+	amount: payload.amount
+	
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="5108bac3-2c36-4612-a4f6-86b0ce403f59" message="#[payload]" />
+								<ee:transform doc:name="Transform Message" doc:id="122c966f-53de-4cb5-bea8-434f0b634633" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload
+]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</when>
+							<otherwise>
+								<ee:transform doc:name="Transform Message" doc:id="10b2355e-fa8a-4ed7-9a65-95561eca46df">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: payload.status,
+	reason: payload.reason ++" and Approved by MG1 and MG2",
+	amount: payload.amount
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="ebd87454-4fc8-4f24-bb5a-932f4d2c1ad2" message="#[payload]" />
+								<ee:transform doc:name="Transform Message" doc:id="58ffac09-5b05-4df0-b45c-311b3f689f8d" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</otherwise>
+						</choice>
+					</when>
+					<otherwise>
+						<ee:transform doc:name="Transform Message" doc:id="711c0596-b050-4d05-95a9-6d6c3babd9ab" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</otherwise>
+				</choice>
+			</when>
+			<when expression='#[payload.TYPE == "Personal"]'>
+				<ee:transform doc:name="Transform Message" doc:id="6b66bc8e-6273-475a-adb5-f09e428c19a9" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="Personal" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<http:request method="GET" doc:name="Request" doc:id="aa3d6811-837b-4146-aee2-5ede22d1decc" config-ref="main_http_request" path="/api/cibil-score/{UserId}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"UserId" : vars.Personal.USERID
+}]]]></http:uri-params>
+				</http:request>
+				<ee:transform doc:name="Transform Message" doc:id="9d9dcb80-9a64-4ead-b64f-b8c29129b142" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+
+---
+{
+	
+  "loan_id": vars.Personal.LOAN_ID as Number,
+  "user_id": vars.Personal.USERID as Number,
+  ("status": "Accepted") if(10.5< vars.Personal.INTEREST as Number and vars.Personal.INTEREST as Number < 12.5 and 24< vars.Personal.TENURE as Number and vars.Personal.TENURE as Number < 60 and payload.Score > 700 and vars.Personal.INCOME as Number  > 25000),
+  ("status": "Denied") if (10.5>= vars.Personal.INTEREST as Number  or vars.Personal.INTEREST as Number >=12.5 or 24>vars.Personal.TENURE as Number or vars.Personal.TENURE as Number >= 60 or payload.Score  <=700 or vars.Personal.INCOME as Number <= 25000),
+  "reason": if(10.5>= vars.Personal.INTEREST as Number  and vars.Personal.INTEREST as Number >=12.5 and 24>vars.Personal.TENURE as Number and vars.Personal.TENURE as Number >= 60 or payload.Score  <=700 or vars.Personal.INCOME as Number <= 25000)("All criteria are not satisfied") else if(10.5>= vars.Personal.INTEREST as Number or vars.Personal.INTEREST as Number >=12.5)("interest not in range") else if(vars.Personal.INCOME as Number <= 25000)("income not in range") else if( 24>= vars.Personal.TENURE as Number or vars.Personal.TENURE as Number  >= 60)("tenure not in range") else if(payload.Score <=700)("Score not in range") else("fulfilled all criteria"),
+  //("reason": "interest not in range") if(10.5>= vars.Personal.INTEREST as Number or vars.Personal.INTEREST as Number >=12.5),
+  //("reason": "income not in range") if(vars.Personal.INCOME as Number <= 25000),
+  //("reason": "tenure not in range") if( 24>= vars.Personal.TENURE as Number or vars.Personal.TENURE as Number  >= 60),
+  //("reason": "Score not in range") if(payload.SCORE[0] <=700),
+  //("reason": "fulfilled all criteria") if(10.5< vars.Personal.INTEREST as Number  and vars.Personal.INTEREST  as Number < 12.5 and 24 < vars.Personal.TENURE as Number and vars.Personal.TENURE as Number < 60 and payload.SCORE[0]  > 700),
+  "amount": vars.Personal.LOAN_AMOUNT as Number
+
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="177e1085-decd-415a-a511-d34e49017864" message="#[payload]"/>
+				<choice doc:name="Choice" doc:id="7ca0130f-8681-412a-ba2f-2189a1fb376a">
+					<when expression='#[payload.amount &gt;= 200000 and payload.status == "Accepted"]'>
+						<ee:transform doc:name="Transform Message" doc:id="9038bf27-68ea-4158-b2b3-78dc5862a1d8">
+							<ee:message>
+								<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<choice doc:name="Choice" doc:id="3c0ee0fd-5c30-47dd-86ad-b8561d24d89e">
+							<when expression="#[payload.amount&gt;= 200000 and payload.amount &lt;=500000]">
+								<ee:transform doc:name="Transform Message" doc:id="631fcfe4-d984-496e-9920-2f41a58900d8">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: payload.status,
+	reason: payload.reason ++"Approved by MG1",
+	amount: payload.amount
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="879a2c1e-4011-4c1e-8bd9-66a2a7f59e50" message="#[payload]" />
+								<ee:transform doc:name="Transform Message" doc:id="f7f1fedf-e911-4e6d-a6a0-d5b01c317935" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</when>
+							<otherwise>
+								<ee:transform doc:name="Transform Message" doc:id="078ad050-a341-4212-9c7b-d6c78ed39b39">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: payload.status,
+	reason: payload.reason ++" and Approved by MG1 and MG2",
+	amount: payload.amount
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="1ed289c5-3946-4b73-b20c-934fdae56527" message="#[payload]" />
+								<ee:transform doc:name="Transform Message" doc:id="6048b9f8-bfb7-40f1-af57-7692380088ef" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</otherwise>
+						</choice>
+					</when>
+					<otherwise>
+						<ee:transform doc:name="Transform Message" doc:id="62038f06-e0a4-49d0-b731-40d2388bb219" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</otherwise>
+				</choice>
+				
+			</when>
+			<when expression='#[payload.TYPE == "Car"]'>
+				<ee:transform doc:name="Transform Message" doc:id="188dafde-c476-4bd3-a729-22fe83e0b171" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="Car" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<http:request method="GET" doc:name="Request" doc:id="68b636a6-76f6-47e7-b0e0-e6d4b7d87ea5" config-ref="main_http_request" path="/api/cibil-score/{UserId}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"UserId" : vars.Car.USERID
+}]]]></http:uri-params>
+				</http:request>
+				<ee:transform doc:name="Transform Message" doc:id="d6412536-7ac0-459d-87c7-0b84cd5989ae" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+---
+{
+	
+  "loan_id": vars.Car.LOAN_ID as Number,
+  "user_id": vars.Car.USERID as Number,
+  ("status": "Accepted") if(9.5<vars.Car.INTEREST as Number and  vars.Car.INTEREST as Number < 11.5 and 12< vars.Car.TENURE as Number  and vars.Car.TENURE as Number <60 and payload.Score as Number>750 and vars.Car.INCOME as Number > 25000),
+  ("status": "Denied") if (9.5 >= vars.Car.INTEREST as Number or vars.Car.INTEREST as Number >=11.5 or 12 >= vars.Car.TENURE as Number or vars.Car.TENURE as Number >=60 or payload.Score as Number <= 750 or vars.Car.INCOME as Number <= 25000),
+  "reason": if(9.5 >= vars.Car.INTEREST as Number and vars.Car.INTEREST as Number >=11.5 and 12 >= vars.Car.TENURE as Number and vars.Car.TENURE as Number >=60 and payload.Score as Number <= 750 and vars.Car.INCOME as Number <= 25000)("All criteria are not satisfied") else if(9.5 >= vars.Car.INTEREST as Number or vars.Car.INTEREST as Number >=11.5)("interest not in range") else if(vars.Car.INCOME as Number <= 25000)("income not in range") else if( 12 >= vars.Car.TENURE as Number or vars.Car.TENURE as Number >=60)("tenure not in range") else if(payload.Score <=750)("Score not in range") else("fulfilled all criteria"),
+  //("reason": "interest not in range") if(9.5 >= vars.Car.INTEREST as Number or vars.Car.INTEREST as Number >=11.5),
+  //("reason": "income not in range") if(vars.Car.INCOME as Number <= 25000),
+  //("reason": "tenure not in range") if(12 >= vars.Car.TENURE as Number or vars.Car.TENURE as Number >=60),
+  //("reason": "Score not in range") if(payload.SCORE[0] as Number <=750),
+  //("reason": "fulfilled all criteria") if(9.5<vars.Car.INTEREST as Number and vars.Car.INTEREST as Number <11.5 and 12< vars.Car.TENURE as Number and vars.Car.TENURE as Number <60 and payload.SCORE[0] as Number>750),
+  "amount": vars.Car.LOAN_AMOUNT as Number
+
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="5cec7a4c-2f08-486c-84a6-9fea5161719a" message="#[payload]"/>
+				<choice doc:name="Choice" doc:id="5c41889a-7fb8-45a0-8b29-aff692705739" >
+					<when expression='#[payload.amount &gt;= 200000 and payload.status == "Accepted"]'>
+						<ee:transform doc:name="Transform Message" doc:id="b78d3434-5dd2-41d0-b38b-d8b7df79ff1a" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<choice doc:name="Choice" doc:id="5ba903f1-0a20-4f3e-ab28-b20cb43c834e">
+							<when expression="#[payload.amount &gt;= 200000 and payload.amount &lt;=7000000]">
+								<ee:transform doc:name="Transform Message" doc:id="5fa49b27-5a8f-4656-bdd0-3bbe44b77c66">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: payload.status,
+	reason: payload.reason ++" and Approved by MG1",
+	amount: payload.amount
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="6805e397-c17d-4a1b-bd57-8bfc11f5e299" message="#[payload]" />
+								<ee:transform doc:name="Transform Message" doc:id="eb6de46d-ef6c-437b-bf48-2a4758f36a84" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</when>
+							<otherwise>
+								<ee:transform doc:name="Transform Message" doc:id="f97601fd-22c0-4530-b9d9-886600b52c50">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: payload.status,
+	reason: payload.reason ++" and Approved MG1 and MG2",
+	amount: payload.amount
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</otherwise>
+						</choice>
+					</when>
+					<otherwise >
+						<ee:transform doc:name="Transform Message" doc:id="238d69dd-7aab-4cb4-85fa-f103b0deb72b">
+							<ee:message>
+								<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</otherwise>
+				</choice>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="cd884bb0-12e4-46f2-abca-7bf994e92608" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="Agri" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<http:request method="GET" doc:name="Request" doc:id="5ca2c837-8414-4b37-9d57-0d7ab66f9547" config-ref="main_http_request" path="/api/cibil-score/{UserId}">
+					<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"UserId" : vars.Agri.USERID
+}]]]></http:uri-params>
+				</http:request>
+				<ee:transform doc:name="Transform Message" doc:id="755c4145-abb9-4d44-ba00-6bd07e1b9a6d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+---
+{
+	
+  "loan_id": vars.Agri.LOAN_ID as Number,
+  "user_id": vars.Agri.USERID as Number,
+  ("status": "Accepted") if(8.5< vars.Agri.INTEREST as Number and vars.Agri.INTEREST as Number <10.5 and 12<vars.Agri.TENURE as Number and vars.Agri.TENURE as Number <24 and payload.Score as Number > 550  and vars.Agri.INCOME as Number > 10000),
+  ("status": "Denied") if (8.5>= vars.Agri.INTEREST as Number or vars.Agri.INTEREST as Number >= 10.5 or 12 >= vars.Agri.TENURE as Number or vars.Agri.TENURE as Number <= 24 or vars.Agri.INCOME as Number <= 10000 or payload.Score <=550),
+  "reason": if(8.5>= vars.Agri.INTEREST as Number and vars.Agri.INTEREST as Number <= 10.5 and 12 >= vars.Agri.TENURE as Number and vars.Agri.TENURE as Number <= 24 and vars.Agri.INCOME as Number <= 25000)("All criteria are not satisfied") else if(8.5>= vars.Agri.INTEREST as Number or vars.Agri.INTEREST as Number >= 10.5)("interest not in range") else if(vars.Agri.INCOME as Number <= 10000)("income not in range") else if( 12<vars.Agri.TENURE as Number or vars.Agri.TENURE as Number <= 24)("tenure not in range") else if(payload.Score <=550)("Score not in range") else("fulfilled all criteria"),
+  //("reason": "interest not in range") if(8.5>= vars.Agri[0].INTEREST as Number or vars.Agri[0].INTEREST as Number <= 10.5),
+  //("reason": "income not in range") if(vars.Agri[0].INCOME as Number <= 10000),
+  //("reason": "tenure not in range") if(12 >= vars.Agri[0].TENURE as Number or vars.Agri[0].TENURE as Number >=24),
+  //("reason": "Score not in range") if(payload.SCORE<=550),
+  //("reason": "fulfilled all criteria") if(8.5< vars.Agri[0].INTEREST as Number and vars.Agri[0].INTEREST as Number <10.5 and 12<vars.Agri[0].TENURE as Number and vars.Agri[0].TENURE as Number <24 and payload.SCORE[0] as Number > 550),
+  "amount": vars.Agri.LOAN_AMOUNT as Number
+
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="cf304ac8-201f-41e2-8ce0-fe016ff87c17" message="#[payload]"/>
+				<choice doc:name="Choice" doc:id="ee5f8836-5e07-4f28-b913-c59427d7c694" >
+					<when expression='#[payload.amount &gt;= 200000 and payload.status == "Accepted"]'>
+						<ee:transform doc:name="Transform Message" doc:id="5c6358af-da47-490f-b43e-c9ff2a34ee6d" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<choice doc:name="Choice" doc:id="bf3cb5b1-0971-4aed-9ec1-440ce3ab3c65">
+							<when expression="#[payload.amount &gt;= 200000 and payload.amount &lt;=400000]">
+								<ee:transform doc:name="Transform Message" doc:id="2edc63e2-24cd-4f6a-bd8e-dcf471476364">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: payload.status,
+	reason: payload.reason ++" and Approved MG1 and MG2",
+	amount: payload.amount
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="15010e34-5693-4b78-a274-d0ec666831bf" />
+								<ee:transform doc:name="Transform Message" doc:id="412377e0-ce24-42c1-9b05-8aefc544fcac" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</when>
+							<otherwise>
+								<ee:transform doc:name="Transform Message" doc:id="8252f6a9-f574-4741-a06d-b0d3d974aaff">
+									<ee:message>
+										<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	loan_id: payload.loan_id,
+	user_id: payload.user_id,
+	status: "Denied",
+	reason: payload.reason,
+	amount: payload.amount
+}]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+								<logger level="INFO" doc:name="Logger" doc:id="834674dd-c131-40b7-8d5f-338a24b6f430" />
+								<ee:transform doc:name="Transform Message" doc:id="f7bee239-c7e1-4448-8556-e0fe83de2439" >
+									<ee:message >
+										<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+									</ee:message>
+								</ee:transform>
+							</otherwise>
+						</choice>
+					</when>
+					<otherwise>
+						<ee:transform doc:name="Transform Message" doc:id="7b2cdb15-a884-4562-a326-61c74c1324c3" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</otherwise>
+				</choice>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

@@ -1,0 +1,11 @@
+
+    {
+        "INTEREST": 11.0,
+        "LOAN_AMOUNT": 3000000.0,
+        "TYPE": "Car",
+        "USERID": 1,
+        "EMAIL": "seegp@gmail.com",
+        "TENURE": 7,
+        "LOAN_ID": 19,
+        "INCOME": 25000
+    }
