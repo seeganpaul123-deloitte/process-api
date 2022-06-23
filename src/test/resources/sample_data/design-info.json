@@ -1,0 +1,8 @@
+{
+  "sampleData": {
+    "1b27bb09-bca3-434a-9b63-ff09e1dc3af2": {
+      "vars-userid": "sample_data/defaultnumbertype.json",
+      "vars-loan_id": "sample_data/defaultnumbertype_1.json"
+    }
+  }
+}

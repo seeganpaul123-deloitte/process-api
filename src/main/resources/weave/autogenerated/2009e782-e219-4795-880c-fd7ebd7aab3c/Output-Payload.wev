@@ -1,0 +1,11 @@
+%dw 2.0
+
+type auto_2009e782_e219_4795_880c_fd7ebd7aab3c_Output_Payload = {
+  reason: String, 
+  amount: Number, 
+  user_id: Number, 
+  loan_id: Number, 
+  status: String, 
+  _?: Any
+}
+

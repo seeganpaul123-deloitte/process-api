@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>096484fd-dcfd-4f60-9f58-aecc0e2e110f</groupId>
+  <artifactId>process-api</artifactId>
+  <version>1.0.0</version>
+  <name>Process API</name>
+  <properties>
+    <classifier>raml</classifier>
+    <main>process-api.raml</main>
+    <status>published</status>
+    <originalFormatVersion>1.0</originalFormatVersion>
+    <apiVersion>v1</apiVersion>
+    <projectId>5cc084f2-a061-4e65-82cb-020d9b63831e</projectId>
+    <branchId>master</branchId>
+    <commitId>0871d5e87e6d3fe3b2e63a425369b839110ee6ab</commitId>
+    <keywords/>
+    <type>rest-api</type>
+    <mainFile>process-api.raml</mainFile>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>096484fd-dcfd-4f60-9f58-aecc0e2e110f</groupId>
+      <version>1.0.3</version>
+      <type>zip</type>
+      <classifier>raml-fragment</classifier>
+      <artifactId>resource</artifactId>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>anypoint-exchange</id>
+      <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+    </repository>
+  </repositories>
+</project>
