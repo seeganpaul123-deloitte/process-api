@@ -30,22 +30,22 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-				<cloudHubDeployment>
-					<uri>https://anypoint.mulesoft.com</uri>
-					<muleVersion>4.4.0</muleVersion>
-					<username>mycreditunion</username>
-					<password>Deloitte@123</password>
-					<applicationName>processapi</applicationName>
-					<environment>Sandbox</environment>
-					<workerType>MICRO</workerType>
-					<region>us-east-2</region>
-					<workers>1</workers>
-					<properties>
-						<maven.compiler.target>1.8</maven.compiler.target>
-						<maven.compiler.source>1.8</maven.compiler.source>
-					</properties>
-					<objectStoreV2>true</objectStoreV2>
-				</cloudHubDeployment>
+					<cloudHubDeployment>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<muleVersion>4.4.0</muleVersion>
+						<username>mycreditunion</username>
+						<password>Deloitte@123</password>
+						<applicationName>processapi</applicationName>
+						<environment>Sandbox</environment>
+						<workerType>MICRO</workerType>
+						<region>us-east-2</region>
+						<workers>1</workers>
+						<properties>
+							<maven.compiler.target>1.8</maven.compiler.target>
+							<maven.compiler.source>1.8</maven.compiler.source>
+						</properties>
+						<objectStoreV2>true</objectStoreV2>
+					</cloudHubDeployment>
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>net.snowflake</groupId>
@@ -70,13 +70,6 @@
 			<artifactId>mule-sockets-connector</artifactId>
 			<version>1.2.2</version>
 			<classifier>mule-plugin</classifier>
-		</dependency>
-		<dependency>
-			<groupId>096484fd-dcfd-4f60-9f58-aecc0e2e110f</groupId>
-			<artifactId>process-api</artifactId>
-			<version>1.0.0</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
 		</dependency>
 		<dependency>
 			<groupId>org.mule.modules</groupId>
@@ -112,6 +105,13 @@
 			<artifactId>mule-secure-configuration-property-module</artifactId>
 			<version>1.2.3</version>
 			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>096484fd-dcfd-4f60-9f58-aecc0e2e110f</groupId>
+			<artifactId>process-api</artifactId>
+			<version>1.0.1</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
 		</dependency>
 	</dependencies>
 
