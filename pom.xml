@@ -117,9 +117,9 @@
 
 	<repositories>
 		<repository>
-			<id>anypoint-exchange-v1</id>
+			<id>anypoint-exchange-v3</id>
 			<name>Anypoint Exchange</name>
-			<url>https://maven.anypoint.mulesoft.com/api/v1/maven</url>
+			<url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
 			<layout>default</layout>
 		</repository>
 		<repository>
@@ -129,7 +129,6 @@
 			<layout>default</layout>
 		</repository>
 	</repositories>
-
 	<pluginRepositories>
 		<pluginRepository>
 			<id>mulesoft-releases</id>
@@ -140,6 +139,10 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
+		  <pluginRepository>
+    	  <id>mule-public</id>
+    	  <url>https://repository.mulesoft.org/nexus/content/repositories/releases</url>
+  </pluginRepository>
 	</pluginRepositories>
 
 </project>
