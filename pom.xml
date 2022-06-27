@@ -116,68 +116,18 @@
 	</dependencies>
 
 	<repositories>
-				<repository>
-					<id>mulesoft-releases</id>
-					<name>MuleSoft Releases Repository</name>
-					<url>https://repository.mulesoft.org/releases/</url>
-					<layout>default</layout>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>mulesoft-public</id>
-					<name>MuleSoft Public Repository</name>
-					<url>https://repository.mulesoft.org/nexus/content/repositories/public</url>
-					<layout>default</layout>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-				<!-- Anypoint Exchange Repo -->
-				<repository>
-					<id>Exchange</id>
-					<name>anypoint.exchange.repository</name>
-					<url>${anypoint.exchange.repository}</url>
-					<layout>default</layout>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>anypoint-exchange-v2</id>
-					<name>anypoint.exchange.repository</name>
-					<url>${anypoint.exchange.repository}</url>
-					<layout>default</layout>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
-				<!-- Corporate Anypoint Exchange Repo -->
-				<repository>
-					<id>anypoint-exchange</id>
-					<name>Corporate Anypoint Exchange</name>
-					<url>https://maven.anypoint.mulesoft.com/api/v1/organizations/${anypoint.org.id}/maven/</url>
-					<layout>default</layout>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
+<repository>
+			<id>anypoint-exchange-v3</id>
+			<name>Anypoint Exchange</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>mulesoft-releases</id>
+			<name>MuleSoft Releases Repository</name>
+			<url>https://repository.mulesoft.org/releases/</url>
+			<layout>default</layout>
+		</repository>
 	</repositories>
 	
 	<pluginRepositories>
