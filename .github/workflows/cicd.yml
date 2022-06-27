@@ -22,7 +22,144 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-      
+    - name: maven-settings-xml-action
+      uses: whelk-io/maven-settings-xml-action@v20
+      with:
+        repositories: >
+          [
+          {
+				    "id": "maven-central",
+				    "name": "Maven Central Repository",
+				    "url": "https://repo1.maven.org/maven2/",
+				    "layout": "default",
+				    "releases": {
+					    "enabled": "true"
+				    },
+				    "snapshots": {
+					    "enabled": "true"
+				    }
+          },
+          {
+				"id": "mulesoft-releases",
+				"name": "MuleSoft Releases Repository",
+				"url": "http://repository.mulesoft.org/releases/",
+				"layout": "default",
+				"releases": {
+					"enabled": "true"
+				},
+				"snapshots": {
+					"enabled": "true"
+				}
+			},
+			{
+				"id": "mulesoft-releases-ee",
+				"name": "MuleSoft Enterprise Releases Repository",
+				"url": "https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/",
+				"layout": "default",
+				"releases": {
+					"enabled": "true"
+				},
+				"snapshots": {
+					"enabled": "true"
+				}
+			},
+			{
+				"id": "mulesoft-public",
+				"name": "MuleSoft Public Repository",
+				"url": "https://repository.mulesoft.org/nexus/content/repositories/public",
+				"layout": "default",
+				"releases": {
+					"enabled": "true"
+				},
+				"snapshots": {
+					"enabled": "false"
+				}
+			},
+			{
+				"id": "Exchange",
+				"name": "anypoint.exchange.repository",
+				"url": "https://maven.anypoint.mulesoft.com/api/v3/maven",
+				"layout": "default",
+				"releases": {
+					"enabled": "true"
+				},
+				"snapshots": {
+					"enabled": "true"
+				}
+			},
+			{
+				"id": "anypoint-exchange-v2",
+				"name": "anypoint.exchange.repository",
+				"url": "https://maven.anypoint.mulesoft.com/api/v3/maven",
+				"layout": "default",
+				"releases": {
+					"enabled": "true"
+				},
+				"snapshots": {
+					"enabled": "true"
+				}
+			},
+			{
+				"id": "anypoint-exchange",
+				"name": "Corporate Anypoint Exchange",
+				"url": "https://maven.anypoint.mulesoft.com/api/v1/organizations/096484fd-dcfd-4f60-9f58-aecc0e2e110f/maven/",
+				"layout": "default",
+				"releases": {
+					"enabled": "true"
+				},
+				"snapshots": {
+					"enabled": "true"
+				}
+			}
+    ]
+    servers: >
+      [
+        {
+				"id": "Exchange",
+				"username": "mycreditunion",
+				"password": "Deloitte@123"
+			  },
+			{
+				"id": "anypoint-exchange",
+				"username": "mycreditunion",
+				"password": "Deloitte@123"
+			},
+			{
+				"id": "anypoint-exchange-v2",
+				"username": "mycreditunion",
+				"password": "Deloitte@123"
+			},
+			{
+				"id": "Exchange2",
+				"username": "mycreditunion",
+				"password": "Deloitte@123"
+			},
+			{
+				"id": "mulesoft-releases",
+				"username": "mycreditunion",
+				"password": "Deloitte@123"
+			},
+			{
+				"id": "mulesoft-snapshots",
+				"username": "mycreditunion",
+				"password": "Deloitte@123"
+			},
+			{
+				"id": "mulesoft-releases-ee",
+				"username": "mycreditunion",
+				"password": "Deloitte@123"
+			}
+      ]
+    profiles: >
+      [
+        {"id": "global-settings",
+		"properties": {
+			"anypoint.org.id": "096484fd-dcfd-4f60-9f58-aecc0e2e110f",
+			"anypoint.exchange.repository": "https://maven.anypoint.mulesoft.com/api/v3/maven"
+		}
+    }
+      ]
+
     - name: Print effective-settings (optional)
       run: mvn help:effective-settings
     
