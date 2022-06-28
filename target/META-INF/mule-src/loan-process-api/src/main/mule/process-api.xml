@@ -122,8 +122,8 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\verification:process-api-config">
-        <sqs:receivemessages doc:name="Receive messages" doc:id="3978d710-5e25-4f63-a1f9-8c995e2d626f" config-ref="Amazon_SQS_Configuration" frequency="70" startDelay="10" queueUrl="${secure::loan.Queue Url}" visibilityTimeout="1"/>
-		<logger level="INFO" doc:name="Logger" doc:id="d0e0d443-4c8c-4502-9dd5-3abccacc2b08" />
+        <sqs:receivemessages doc:name="Receive messages" doc:id="3978d710-5e25-4f63-a1f9-8c995e2d626f" config-ref="Amazon_SQS_Configuration" queueUrl="${secure::loan.Queue Url}" visibilityTimeout="1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d0e0d443-4c8c-4502-9dd5-3abccacc2b08" message="#[payload]"/>
 		<ee:transform doc:name="Transform Message" doc:id="8e5fb5ba-6473-415f-8a15-0ef8e3e29dd5" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[output application/json
@@ -133,22 +133,5 @@ payload1]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<flow-ref doc:name="Flow Reference" doc:id="f98e2f37-5031-4d3d-bf8a-a3d0aa7fc662" name="get-verification"/>
-    </flow>
-    <flow name="post:\email\(userId):application\json:process-api-config">
-        <ee:transform>
-            <ee:variables>
-                <ee:set-variable variableName="userId">attributes.uriParams.'userId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "email sent successfully"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
     </flow>
 </mule>
