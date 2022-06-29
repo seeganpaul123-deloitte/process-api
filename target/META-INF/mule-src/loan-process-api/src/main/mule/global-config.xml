@@ -30,8 +30,8 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 	<secure-properties:config name="aws_Properties_Config" doc:name="Secure Properties Config" doc:id="355c4840-37b4-4988-ba91-43ec0aeb2f42" file="aws_properties.yaml" key="loan" >
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
-	<http:request-config name="main_http_request" doc:name="HTTP Request configuration" doc:id="59fa5569-dcd0-4705-8855-02ca5946c744" >
-		<http:request-connection host="localhost" port="8083" />
+	<http:request-config name="main_http_request" doc:name="HTTP Request configuration" doc:id="59fa5569-dcd0-4705-8855-02ca5946c744" responseTimeout="30000">
+		<http:request-connection host="mule-app-loan-system-api-github.us-e2.cloudhub.io"/>
 	</http:request-config>
 	<secure-properties:config name="mg1_queue_properties_config" doc:name="Secure Properties Config" doc:id="a2da75fe-305c-4589-ac6a-319f562410f0" file="mg1_queue._properties.yaml" key="aws" >
 		<secure-properties:encrypt algorithm="Blowfish" />
