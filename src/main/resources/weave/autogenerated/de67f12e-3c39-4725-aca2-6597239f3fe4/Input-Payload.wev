@@ -1,0 +1,10 @@
+%dw 2.0
+
+type auto_de67f12e_3c39_4725_aca2_6597239f3fe4_Input_Payload = {|
+  loan_id: Number, 
+  user_id: Number, 
+  status*?: "Accepted" | "Denied", 
+  reason: "All criteria are not satisfied" | "interest not in range" | "income not in range" | "tenure not in range" | "Score not in range" | "fulfilled all criteria", 
+  amount: Number
+|}
+

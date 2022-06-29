@@ -157,6 +157,7 @@ output application/json
 						</ee:transform>
 					</when>
 					<otherwise>
+						<flow-ref doc:name="Flow Reference" doc:id="d69f395f-5530-426e-8aef-cf27b2a7c90e" name="email"/>
 						<ee:transform doc:name="Transform Message" doc:id="711c0596-b050-4d05-95a9-6d6c3babd9ab" >
 							<ee:message >
 								<ee:set-payload ><![CDATA[%dw 2.0
@@ -188,6 +189,26 @@ payload]]></ee:set-variable>
 				</http:request>
 				<ee:transform doc:name="Transform Message" doc:id="9d9dcb80-9a64-4ead-b64f-b8c29129b142" >
 					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+
+---
+{
+	
+  "loan_id": vars.Personal.LOAN_ID as Number,
+  "user_id": vars.Personal.USERID as Number,
+  ("status": "Accepted") if(10.5< vars.Personal.INTEREST as Number and vars.Personal.INTEREST as Number < 12.5 and 24< vars.Personal.TENURE as Number and vars.Personal.TENURE as Number < 60 and payload.Score > 700 and vars.Personal.INCOME as Number  > 25000),
+  ("status": "Denied") if (10.5>= vars.Personal.INTEREST as Number  or vars.Personal.INTEREST as Number >=12.5 or 24>vars.Personal.TENURE as Number or vars.Personal.TENURE as Number >= 60 or payload.Score  <=700 or vars.Personal.INCOME as Number <= 25000),
+  "reason": if(10.5>= vars.Personal.INTEREST as Number  and vars.Personal.INTEREST as Number >=12.5 and 24>vars.Personal.TENURE as Number and vars.Personal.TENURE as Number >= 60 and payload.Score  <=700 and vars.Personal.INCOME as Number <= 25000)("All criteria are not satisfied") else if(10.5>= vars.Personal.INTEREST as Number or vars.Personal.INTEREST as Number >=12.5)("interest not in range") else if(vars.Personal.INCOME as Number <= 25000)("income not in range") else if( 24>= vars.Personal.TENURE as Number or vars.Personal.TENURE as Number  >= 60)("tenure not in range") else if(payload.Score <=700)("Score not in range") else("fulfilled all criteria"),
+  //("reason": "interest not in range") if(10.5>= vars.Personal.INTEREST as Number or vars.Personal.INTEREST as Number >=12.5),
+  //("reason": "income not in range") if(vars.Personal.INCOME as Number <= 25000),
+  //("reason": "tenure not in range") if( 24>= vars.Personal.TENURE as Number or vars.Personal.TENURE as Number  >= 60),
+  //("reason": "Score not in range") if(payload.SCORE[0] <=700),
+  //("reason": "fulfilled all criteria") if(10.5< vars.Personal.INTEREST as Number  and vars.Personal.INTEREST  as Number < 12.5 and 24 < vars.Personal.TENURE as Number and vars.Personal.TENURE as Number < 60 and payload.SCORE[0]  > 700),
+  "amount": vars.Personal.LOAN_AMOUNT as Number
+
+}]]></ee:set-payload>
 					</ee:message>
 					<ee:variables >
 						<ee:set-variable variableName="loanStatus" ><![CDATA[%dw 2.0
@@ -252,6 +273,7 @@ output application/json
 						</ee:transform>
 					</when>
 					<otherwise>
+						<flow-ref doc:name="Flow Reference" doc:id="6b9e9b6e-cea3-4a4b-b39d-f063ec45ef01" name="email"/>
 						<ee:transform doc:name="Transform Message" doc:id="62038f06-e0a4-49d0-b731-40d2388bb219">
 							<ee:message>
 								<ee:set-payload><![CDATA[%dw 2.0
@@ -346,6 +368,7 @@ output application/json
 						</ee:transform>
 					</when>
 					<otherwise >
+						<flow-ref doc:name="Flow Reference" doc:id="1bce8d05-19c7-4e20-956b-4ce21b753da7" name="email"/>
 						<ee:transform doc:name="Transform Message" doc:id="238d69dd-7aab-4cb4-85fa-f103b0deb72b">
 							<ee:message>
 								<ee:set-payload><![CDATA[%dw 2.0
@@ -440,6 +463,7 @@ output application/json
 						</ee:transform>
 					</when>
 					<otherwise>
+						<flow-ref doc:name="Flow Reference" doc:id="c0894447-6f83-4046-99e8-8d44c69c7513" name="email"/>
 						<ee:transform doc:name="Transform Message" doc:id="7b2cdb15-a884-4562-a326-61c74c1324c3" >
 							<ee:message >
 								<ee:set-payload ><![CDATA[%dw 2.0
@@ -454,10 +478,13 @@ payload]]></ee:set-payload>
 		</choice>
 	</flow>
 	<flow name="email" doc:id="de67f12e-3c39-4725-aca2-6597239f3fe4" >
-		<email:send doc:name="Send" doc:id="662bfa01-419b-4ed8-8c80-b3140350f128" config-ref="Email_SMTP1" fromAddress="seeganpaul31@gmail.com">
+		<email:send doc:name="Send" doc:id="662bfa01-419b-4ed8-8c80-b3140350f128" config-ref="Email_SMTP1" fromAddress="seeganpaul31@gmail.com" subject="MyCredit Union loan status">
 			<email:to-addresses >
 				<email:to-address value="seeganpaul31@gmail.com" />
 			</email:to-addresses>
+			<email:body contentType="text/plain" encoding="UTF-8" >
+				<email:content ><![CDATA[#["Dear customer your loan status has been updated loan Id: "++ payload.loan_id as String ++", Status: "++ payload.status ++", Reason: "++ payload.reason]]]></email:content>
+			</email:body>
 		</email:send>
 	</flow>
 </mule>
