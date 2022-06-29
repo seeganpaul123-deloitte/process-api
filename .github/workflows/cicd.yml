@@ -184,7 +184,7 @@ jobs:
       run: mvn help:effective-settings
     
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
       
     - name: Stamp artifact file name with commit hash
       run: |
@@ -380,4 +380,4 @@ jobs:
           -Dmule.artifact=$artifactName \
           -Danypoint.username="$USERNAME" \
           -Danypoint.password="$PASSWORD" \
-          -DskipTests
+          -Dmaven.test.skip=true
