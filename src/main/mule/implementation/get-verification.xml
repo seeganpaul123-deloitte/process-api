@@ -273,7 +273,10 @@ output application/json
 						</ee:transform>
 					</when>
 					<otherwise>
+<<<<<<< HEAD
 						<flow-ref doc:name="Flow Reference" doc:id="e8c1d4d0-1fe2-4bf5-b50c-bf9930567ca8" name="email"/>
+=======
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 						<ee:transform doc:name="Transform Message" doc:id="62038f06-e0a4-49d0-b731-40d2388bb219">
 							<ee:message>
 								<ee:set-payload><![CDATA[%dw 2.0
@@ -409,7 +412,11 @@ output application/json
   "loan_id": vars.Agri.LOAN_ID as Number,
   "user_id": vars.Agri.USERID as Number,
   ("status": "Accepted") if(8.5< vars.Agri.INTEREST as Number and vars.Agri.INTEREST as Number <10.5 and 12<vars.Agri.TENURE as Number and vars.Agri.TENURE as Number <24 and payload.Score as Number > 550  and vars.Agri.INCOME as Number > 10000),
+<<<<<<< HEAD
   ("status": "Denied") if (8.5>= vars.Agri.INTEREST as Number or vars.Agri.INTEREST as Number >= 10.5 or 12 >= vars.Agri.TENURE as Number or vars.Agri.TENURE as Number <= 24 or vars.Agri.INCOME as Number <= 10000 or payload.Score <=550),
+=======
+  ("status": "Denied") if (8.5>= vars.Agri.INTEREST as Number and vars.Agri.INTEREST as Number >= 10.5 and 12 >= vars.Agri.TENURE as Number and vars.Agri.TENURE as Number <= 24 and vars.Agri.INCOME as Number <= 10000 and payload.Score <=550),
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
   "reason": if(8.5>= vars.Agri.INTEREST as Number and vars.Agri.INTEREST as Number <= 10.5 and 12 >= vars.Agri.TENURE as Number and vars.Agri.TENURE as Number <= 24 and vars.Agri.INCOME as Number <= 25000)("All criteria are not satisfied") else if(8.5>= vars.Agri.INTEREST as Number or vars.Agri.INTEREST as Number >= 10.5)("interest not in range") else if(vars.Agri.INCOME as Number <= 10000)("income not in range") else if( 12<vars.Agri.TENURE as Number or vars.Agri.TENURE as Number >= 24)("tenure not in range") else if(payload.Score <=550)("Score not in range") else("fulfilled all criteria"),
   //("reason": "interest not in range") if(8.5>= vars.Agri[0].INTEREST as Number or vars.Agri[0].INTEREST as Number <= 10.5),
   //("reason": "income not in range") if(vars.Agri[0].INCOME as Number <= 10000),

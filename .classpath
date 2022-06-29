@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+<<<<<<< HEAD
 	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/096484fd-dcfd-4f60-9f58-aecc0e2e110f/process-api/1.0.1"/>
+=======
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 	<classpathentry kind="con" path="org.mule.tooling.MULE_PROJECT_LIB"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-tools/2.3.9"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-runner/2.3.9"/>

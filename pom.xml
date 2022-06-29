@@ -36,7 +36,11 @@
 						<muleVersion>4.4.0</muleVersion>
 						<username>mycreditunion</username>
 						<password>Deloitte@123</password>
+<<<<<<< HEAD
 						<applicationName>mule-app-loan-process-api-github</applicationName>
+=======
+						<applicationName>mule-app-processapi121212-github</applicationName>
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 						<environment>Sandbox</environment>
 						<workerType>MICRO</workerType>
 						<region>us-east-2</region>
@@ -158,6 +162,18 @@
 			<url>https://repository.mulesoft.org/releases/</url>
 			<layout>default</layout>
 		</repository>
+		<repository>
+                <id>MuleRepository</id>
+                <name>MuleRepository</name>
+                <url>https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/</url>
+                <layout>default</layout>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>

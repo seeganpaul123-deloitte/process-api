@@ -61,8 +61,27 @@
 				<artifactId>munit-maven-plugin</artifactId>
 				<version>${munit.version}</version>
 				<executions>
+<<<<<<< HEAD
 				</executions>
 				<configuration>
+=======
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+							<goal>coverage-report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<coverage>
+						<runCoverage>true</runCoverage>
+						<formats>
+							<format>html</format>
+						</formats>
+					</coverage>
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 				</configuration>
 			</plugin>
 		</plugins>
@@ -136,6 +155,7 @@
 			<version>1.0.2</version>
 			<scope>test</scope>
 		</dependency>
+<<<<<<< HEAD
 		<dependency>
 			<groupId>096484fd-dcfd-4f60-9f58-aecc0e2e110f</groupId>
 			<artifactId>process-api</artifactId>
@@ -143,6 +163,8 @@
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>
+=======
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 	</dependencies>
 
 	<repositories>

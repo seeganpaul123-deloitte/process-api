@@ -1,0 +1,10 @@
+"{
+  \"INTEREST\": 11.0,
+  \"LOAN_AMOUNT\": 100000.0,
+  \"TYPE\": \"Personal\",
+  \"USERID\": 16,
+  \"EMAIL\": \"preran@gmail.com\",
+  \"TENURE\": 25,
+  \"LOAN_ID\": 117,
+  \"INCOME\": 35000.0
+}"

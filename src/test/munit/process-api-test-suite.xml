@@ -50,7 +50,11 @@ http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/
 			</munit-tools:mock-when>
 			<munit-tools:mock-when doc:name="Mock when" doc:id="a867b45d-265a-46a7-8a4c-68be427fb8a7" processor="sqs:send-message">
 				<munit-tools:with-attributes >
+<<<<<<< HEAD
 					<munit-tools:with-attribute whereValue="bf31ee0a-cee5-4c4f-a5fc-330905506d5a" attributeName="doc:id" />
+=======
+					<munit-tools:with-attribute whereValue="d005fcf0-86a1-4aa7-a565-572f88b1010f" attributeName="doc:id" />
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:payload value="#[MunitTools::getResourceAsString('verification/sendMessage.json')]" mediaType="application/json" encoding="UTF-8" />
@@ -167,7 +171,11 @@ http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/
 			</munit-tools:mock-when>
 			<munit-tools:mock-when doc:name="Mock when" doc:id="d415eecd-653c-4c9e-b3e1-f64d18199a3f" processor="sqs:send-message">
 				<munit-tools:with-attributes >
+<<<<<<< HEAD
 					<munit-tools:with-attribute whereValue="c5da28a2-dab7-4248-8012-e5f43cc0a03a" attributeName="doc:id" />
+=======
+					<munit-tools:with-attribute whereValue="d005fcf0-86a1-4aa7-a565-572f88b1010f" attributeName="doc:id" />
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:payload value="#[MunitTools::getResourceAsString('verification/sendMessage.json')]" mediaType="application/json" encoding="UTF-8" />
@@ -225,7 +233,11 @@ http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/
 			</munit-tools:mock-when>
 			<munit-tools:mock-when doc:name="Mock when" doc:id="68ed4377-2ba1-4759-a6ab-fbe3f52f75ff" processor="sqs:send-message">
 				<munit-tools:with-attributes >
+<<<<<<< HEAD
 					<munit-tools:with-attribute whereValue="e1b6ebf7-7466-4bd4-8cbb-bf7672e698ac" attributeName="doc:id" />
+=======
+					<munit-tools:with-attribute whereValue="d005fcf0-86a1-4aa7-a565-572f88b1010f" attributeName="doc:id" />
+>>>>>>> 24c576713225383513b26af6564a78b8593b157c
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:payload value="#[MunitTools::getResourceAsString('verification/sendMessage.json')]" mediaType="application/json" encoding="UTF-8" />
