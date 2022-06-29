@@ -1,7 +1,8 @@
 name: Build and Deploy to cloudhub
 on:
   push:
-    branches: [develop2]
+    branches: 
+        - develop2
   workflow_dispatch: 
 jobs:
   build: 
