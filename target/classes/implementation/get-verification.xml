@@ -504,7 +504,7 @@ payload]]></ee:set-variable>
 				<email:to-address value="seeganpaul31@gmail.com" />
 			</email:to-addresses>
 			<email:body contentType="text/plain" encoding="UTF-8" >
-				<email:content ><![CDATA[#["Dear customer your loan status has been updated,\n loan Id: "++ payload.loan_id as String ++", Amount: "++ payload.amount ++", Interest: "++ payload.interest ++", Tenure: "++ payload.tenure ++", Status: "++ vars.status.status ++", Reason: "++ vars.status.reason]]]></email:content>
+				<email:content ><![CDATA[#["Dear customer your loan status has been updated"++ "\n" ++ "loan Id: "++ payload.loan_id as String ++", Amount: "++ payload.amount ++", Interest: "++ payload.interest ++", Tenure: "++ payload.tenure ++", Status: "++ vars.status.status ++", Reason: "++ vars.status.reason]]]></email:content>
 			</email:body>
 		</email:send>
 	</flow>
