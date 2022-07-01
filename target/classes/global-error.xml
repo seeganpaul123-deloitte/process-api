@@ -84,5 +84,32 @@ output application/json
 				</ee:variables>
 			</ee:transform>
 		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_On Error Propagate" doc:id="9f6fa26b-338c-4474-852f-c661396f653b" type="HTTP:NOT_FOUND" >
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="b6bdb076-ffc3-48d5-ad0c-9fea7b3251f7" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "loan status of the customer is not availabe or the customer is not registered"
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="Copy_of_On Error Propagate" doc:id="ab087d25-a8e4-4198-8fa6-f4120ed7eb84" type="HTTP:TIMEOUT" >
+			<ee:transform doc:name="Copy_of_Transform Message" doc:id="b8fa92bd-211c-4ed2-828c-04db805b52e4" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: error.description
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
 	</error-handler>
 </mule>
